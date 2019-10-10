@@ -6,6 +6,8 @@
  * option. This file may not be copied, modified, or distributed except
  * according to those terms. */
 
+#![allow(unused)]
+
 use crate::have_feature;
 
 /* This list has been generated from a include/mbedtls/ directory as follows:

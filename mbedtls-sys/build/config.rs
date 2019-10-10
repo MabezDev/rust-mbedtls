@@ -6,6 +6,8 @@
  * option. This file may not be copied, modified, or distributed except
  * according to those terms. */
 
+#![allow(unused)]
+
 #[derive(Copy, Clone, PartialEq, Eq)]
 pub enum Macro {
     Undefined,

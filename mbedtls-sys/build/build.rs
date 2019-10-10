@@ -6,7 +6,11 @@
  * option. This file may not be copied, modified, or distributed except
  * according to those terms. */
 
+#![allow(unused)]
+
+#[cfg(feature = "build")]
 extern crate bindgen;
+#[cfg(feature = "build")]
 extern crate cmake;
 
 mod config;
@@ -94,17 +98,39 @@ impl BuildConfig {
     }
 }
 
+#[cfg(feature = "build")]
 fn main() {
     let out_dir = PathBuf::from(env::var_os("OUT_DIR").expect("OUT_DIR environment not set?"));
-    let src = PathBuf::from(env::var("RUST_MBEDTLS_SYS_SOURCE").unwrap_or("vendor".to_owned()));
-    let cfg = BuildConfig {
-        config_h: out_dir.join("config.h"),
-        out_dir: out_dir,
-        mbedtls_src: src,
-    };
+    let config_file = out_dir.join("config.h");
+    // if !config_file.exists() {
+        let src = PathBuf::from(env::var("RUST_MBEDTLS_SYS_SOURCE").unwrap_or("vendor".to_owned()));
+        let cfg = BuildConfig {
+            config_h: config_file,
+            out_dir: out_dir,
+            mbedtls_src: src,
+        };
 
-    cfg.create_config_h();
-    cfg.print_rerun_files();
-    cfg.cmake();
-    cfg.bindgen();
+        cfg.create_config_h();
+        cfg.print_rerun_files();
+        cfg.cmake();
+        cfg.bindgen();
+    // }
+}
+
+#[cfg(not(feature = "build"))]
+fn main() {
+    let cargo = std::env::var_os("CARGO").unwrap();
+    let target = std::env::var_os("TARGET").unwrap();
+    if target == "thumbv7m-none-eabi" { // TODO REMOVE
+        let args = [
+            /* cargo, */ "run",
+            "--bin", "build-script-build",
+            "--features", "build",
+            // "--target", target.to_str().unwrap(),
+            "--target-dir", /* $OUT_DIR/bindgen */
+        ];
+        let mut target_dir = std::path::PathBuf::from(std::env::var_os("OUT_DIR").unwrap());
+        target_dir.push("bindgen");
+        assert!(std::process::Command::new(&cargo).args(args.iter()).arg(&target_dir).status().unwrap().success())
+    }
 }

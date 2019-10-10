@@ -6,6 +6,9 @@
  * option. This file may not be copied, modified, or distributed except
  * according to those terms. */
 
+#![allow(unused)]
+
+#[cfg(feature = "build")]
 use bindgen;
 
 use std::fs::File;
@@ -16,6 +19,7 @@ use crate::headers;
 #[derive(Debug)]
 struct StderrLogger;
 
+#[cfg(feature = "build")]
 impl bindgen::Logger for StderrLogger {
     fn error(&self, msg: &str) {
         let _ = writeln!(stderr(), "Bindgen ERROR: {}", msg);
@@ -25,6 +29,7 @@ impl bindgen::Logger for StderrLogger {
     }
 }
 
+#[cfg(feature = "build")]
 impl super::BuildConfig {
     pub fn bindgen(&self) {
         let header = self.out_dir.join("bindgen-input.h");
@@ -41,6 +46,8 @@ impl super::BuildConfig {
         let mut bindgen = bindgen::Builder::new(header.into_os_string().into_string().unwrap());
         let bindings = bindgen
             .log(&logger)
+            // .clang_arg("--sysroot=/usr/arm-none-eabi/")
+            // .clang_arg(format!("--target={}", std::env::var_os("TARGET").unwrap().to_str().unwrap()))
             .clang_arg("-Dmbedtls_t_udbl=mbedtls_t_udbl;") // bindgen can't handle unused uint128
             .clang_arg(format!(
                 "-DMBEDTLS_CONFIG_FILE=<{}>",

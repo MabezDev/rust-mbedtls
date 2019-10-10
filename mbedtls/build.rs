@@ -12,6 +12,9 @@ use std::env;
 
 fn main() {
     let mut b = cc::Build::new();
+    b.pic(false);
+    b.static_flag(true);
+    b.shared_flag(false);
     b.file("src/rust_printf.c");
     if env::var_os("CARGO_FEATURE_STD").is_none()
         || ::std::env::var("TARGET")
