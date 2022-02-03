@@ -35,11 +35,18 @@ cfg-if = "1.0.0"
 rs-libc = "0.2.0"
 chrono = "0.4"
 
-[dependencies.mbedtls-sys-auto]
+[target.'cfg(not(target_os = "espidf"))'.dependencies.mbedtls-sys-auto]
 version = "2.25.0"
 default-features = false
 features = ["custom_printf", "trusted_cert_callback", "threading"]
 path = "../mbedtls-sys"
+
+# this doesn't work, even though there is literally an example in the cargo book: https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html#platform-specific-dependencies
+# [target.'cfg(target_os = "espidf")'.dependencies.mbedtls-sys-auto]
+# package = "esp-idf-sys"
+
+[target.'cfg(target_os = "espidf")'.dependencies.esp-idf-sys]
+path = "/home/mabez/development/rust/embedded/util/esp-idf-sys"
 
 [dev-dependencies]
 libc = "0.2.0"
@@ -54,17 +61,17 @@ cc = "1.0"
 
 [features]
 # Features are documented in the README
-default = ["std", "aesni", "time", "padlock"]
-std = ["mbedtls-sys-auto/std", "serde/std", "yasna"]
-debug = ["mbedtls-sys-auto/debug"]
+default = ["std"] #  "time", ,"padlock"
+std = ["serde/std", "yasna"] # "mbedtls-sys-auto/std", 
+# debug = ["mbedtls-sys-auto/debug"]
 no_std_deps = ["core_io", "spin"]
-force_aesni_support = ["mbedtls-sys-auto/custom_has_support", "mbedtls-sys-auto/aes_alt", "aesni"]
-mpi_force_c_code = ["mbedtls-sys-auto/mpi_force_c_code"]
-rdrand = []
-aesni = ["mbedtls-sys-auto/aesni"]
-zlib = ["mbedtls-sys-auto/zlib"]
-time = ["mbedtls-sys-auto/time"]
-padlock = ["mbedtls-sys-auto/padlock"]
+# force_aesni_support = ["mbedtls-sys-auto/custom_has_support", "mbedtls-sys-auto/aes_alt", "aesni"]
+# mpi_force_c_code = ["mbedtls-sys-auto/mpi_force_c_code"]
+# rdrand = []
+# aesni = ["mbedtls-sys-auto/aesni"]
+# zlib = ["mbedtls-sys-auto/zlib"]
+# time = ["mbedtls-sys-auto/time"]
+# padlock = ["mbedtls-sys-auto/padlock"]
 dsa = ["std", "yasna", "num-bigint", "bit-vec"]
 pkcs12 = ["std", "yasna"]
 pkcs12_rc2 = ["pkcs12", "rc2", "block-modes"]
