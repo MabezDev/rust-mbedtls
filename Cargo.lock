@@ -838,7 +838,6 @@ dependencies = [
  "hyper",
  "libc",
  "matches",
- "mbedtls-sys-auto",
  "num-bigint",
  "rand",
  "rc2",
