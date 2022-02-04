@@ -332,7 +332,7 @@ impl Cipher {
         let mut cipher_len = cipher_and_tag.len();
         unsafe {
             // cipher_auth_encrypt_ext(
-            cipher_auth_encrypt( // espidf
+            cipher_auth_encrypt( // FIXME: esp-idf
                 &mut self.inner,
                 iv.as_ptr(),
                 iv_len,
@@ -371,7 +371,7 @@ impl Cipher {
         let mut plain_len = plain.len();
         unsafe {
             // cipher_auth_decrypt_ext(
-            cipher_auth_decrypt( // esp-idf
+            cipher_auth_decrypt( // FIXME: esp-idf
                 &mut self.inner,
                 iv.as_ptr(),
                 iv_len,

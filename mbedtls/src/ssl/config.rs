@@ -372,7 +372,7 @@ impl Config {
         }
 
         self.ca_callback = Some(Arc::new(cb));
-        // FIXME: espidf this method is missing
+        // FIXME: esp-idf this method is missing
         // unsafe { ssl_conf_ca_cb( self.into(), Some(ca_callback::<F>), &**self.ca_callback.as_mut().unwrap() as *const _ as *mut c_void) }
     }
 
