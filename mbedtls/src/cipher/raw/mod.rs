@@ -133,13 +133,12 @@ define!(
         Camellia128Ccm = CIPHER_CAMELLIA_128_CCM,
         Camellia192Ccm = CIPHER_CAMELLIA_192_CCM,
         Camellia256Ccm = CIPHER_CAMELLIA_256_CCM,
-        // FIXME: esp-idf
-        // Aes128Kw = CIPHER_AES_128_KW,
-        // Aes192Kw = CIPHER_AES_192_KW,
-        // Aes256Kw = CIPHER_AES_256_KW,
-        // Aes128Kwp = CIPHER_AES_128_KWP,
-        // Aes192Kwp = CIPHER_AES_192_KWP,
-        // Aes256Kwp = CIPHER_AES_256_KWP,
+        Aes128Kw = CIPHER_AES_128_KW,
+        Aes192Kw = CIPHER_AES_192_KW,
+        Aes256Kw = CIPHER_AES_256_KW,
+        Aes128Kwp = CIPHER_AES_128_KWP,
+        Aes192Kwp = CIPHER_AES_192_KWP,
+        Aes256Kwp = CIPHER_AES_256_KWP,
     }
 );
 
@@ -331,8 +330,7 @@ impl Cipher {
         let iv_len = self.inner.iv_size;
         let mut cipher_len = cipher_and_tag.len();
         unsafe {
-            // cipher_auth_encrypt_ext(
-            cipher_auth_encrypt( // FIXME: esp-idf
+            cipher_auth_encrypt_ext(
                 &mut self.inner,
                 iv.as_ptr(),
                 iv_len,
@@ -341,8 +339,8 @@ impl Cipher {
                 plain.as_ptr(),
                 plain.len(),
                 cipher_and_tag.as_mut_ptr(),
+                cipher_len,
                 &mut cipher_len,
-                &mut (cipher_len as u8),
                 tag_len,
             )
             .into_result()?
@@ -370,8 +368,7 @@ impl Cipher {
         let iv_len = self.inner.iv_size;
         let mut plain_len = plain.len();
         unsafe {
-            // cipher_auth_decrypt_ext(
-            cipher_auth_decrypt( // FIXME: esp-idf
+            cipher_auth_decrypt_ext(
                 &mut self.inner,
                 iv.as_ptr(),
                 iv_len,
@@ -380,8 +377,8 @@ impl Cipher {
                 cipher_and_tag.as_ptr(),
                 cipher_and_tag.len(),
                 plain.as_mut_ptr(),
+                plain_len,
                 &mut plain_len,
-                &mut (plain_len as u8),
                 tag_len,
             )
             .into_result()?
