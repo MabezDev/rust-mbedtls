@@ -46,7 +46,8 @@ chrono = "0.4"
 # package = "esp-idf-sys"
 
 [dependencies.mbedtls-sys] # target.'cfg(target_os = "espidf")'
-path = "/home/mabez/development/rust/embedded/util/esp-idf-sys"
+git = "https://github.com/MabezDev/esp-idf-sys"
+branch = "feature/mbedtls"
 package = "esp-idf-sys"
 
 [dev-dependencies]
